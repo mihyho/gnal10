@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>컬러미배드 — 그날 10기 정기 사진전</title>
+<meta name="description" content="대학생 연합 사진동아리 그날 10기 정기 사진전 [f/10] 온라인 도록">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<noscript>
+  <p style="padding:24px;font-family:sans-serif;">이 페이지는 자바스크립트가 필요합니다. 브라우저 설정에서 자바스크립트를 켜주세요.</p>
+</noscript>
+
+<main id="top">
+
+  <!-- 포스터 -->
+  <section id="poster" class="screen poster-screen" aria-label="포스터">
+    <header class="poster-top">
+      <span id="poster-group" class="mono dim"></span>
+      <span id="poster-mark" class="serif accent poster-mark"></span>
+    </header>
+
+    <div class="poster-frame">
+      <img id="poster-img" class="poster-img" alt="전시 포스터" hidden>
+      <div id="poster-placeholder" class="placeholder-box" aria-hidden="true">
+        <span class="placeholder-label">POSTER</span>
+      </div>
+    </div>
+
+    <div class="poster-info">
+      <h1 id="poster-title" class="serif poster-title"></h1>
+      <p id="poster-eventname" class="poster-eventname"></p>
+      <div class="mono poster-meta">
+        <span id="poster-dates"></span>
+        <span id="poster-venue"></span>
+        <ul id="poster-hours" class="poster-hours"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 전체 서문 -->
+  <section id="intro" class="screen intro-screen" aria-label="서문">
+    <span class="mono accent eyebrow">INTRODUCTION</span>
+    <h2 id="intro-title" class="serif"></h2>
+    <p id="intro-text" class="intro-text"></p>
+  </section>
+
+  <!-- 챕터 1~3 (JS가 data.js 기준으로 채움) -->
+  <section id="chapter-1" class="screen chapter-screen" aria-label="Chapter 1" data-chapter="1"></section>
+  <section id="chapter-2" class="screen chapter-screen" aria-label="Chapter 2" data-chapter="2"></section>
+  <section id="chapter-3" class="screen chapter-screen" aria-label="Chapter 3" data-chapter="3"></section>
+
+  <!-- 챕터 4 -->
+  <section id="chapter-4" class="screen chapter-screen" aria-label="Chapter 4" data-chapter="4"></section>
+
+</main>
+
+<!-- 하단 챕터 이동 내비게이션 -->
+<nav class="bottom-nav" aria-label="챕터 이동">
+  <a href="#poster" data-nav-target="poster">포스터</a>
+  <a href="#intro" data-nav-target="intro">서문</a>
+  <a href="#chapter-1" data-nav-target="chapter-1">1</a>
+  <a href="#chapter-2" data-nav-target="chapter-2">2</a>
+  <a href="#chapter-3" data-nav-target="chapter-3">3</a>
+  <a href="#chapter-4" data-nav-target="chapter-4">4</a>
+</nav>
+
+<!-- 라이트박스: 챕터 1~3 (플립) -->
+<div id="lightbox" class="lightbox" hidden>
+  <button type="button" class="lightbox-close" aria-label="닫기">×</button>
+  <div class="lightbox-stage">
+    <div class="flip-card" role="dialog" aria-modal="true" aria-label="사진 확대 보기">
+      <div class="flip-inner">
+        <div class="flip-face flip-front">
+          <img class="lightbox-img" alt="">
+          <div class="placeholder-box lightbox-placeholder" aria-hidden="true">
+            <span class="placeholder-label"></span>
+          </div>
+        </div>
+        <div class="flip-face flip-back">
+          <div class="lightbox-caption">
+            <p class="lightbox-caption-title serif"></p>
+            <p class="lightbox-caption-meta mono"></p>
+            <p class="lightbox-caption-body"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="lightbox-hint">한 번 더 탭하면 캡션이 보여요 · 바깥을 탭하면 닫혀요</p>
+  </div>
+</div>
+
+<!-- 라이트박스: 챕터 4 (확대 → 두 번째 탭에서 드로잉 패드로 전환) -->
+<div id="ch4-lightbox" class="lightbox" hidden>
+  <button type="button" class="lightbox-close" aria-label="닫기">×</button>
+  <div class="lightbox-stage">
+    <button type="button" class="ch4-card" aria-label="탭해서 손글씨 캡션 남기기">
+      <img class="ch4-lightbox-img" alt="">
+      <div class="placeholder-box lightbox-placeholder" aria-hidden="true">
+        <span class="placeholder-label"></span>
+      </div>
+    </button>
+    <p class="lightbox-hint">한 번 더 탭하면 손글씨 캡션을 남길 수 있어요</p>
+  </div>
+</div>
+
+<!-- 손글씨 캡션 드로잉 패드 -->
+<div id="draw-pad" class="draw-pad" hidden role="dialog" aria-modal="true" aria-label="손글씨 캡션 남기기">
+  <p class="draw-pad-hint">손가락(또는 마우스)으로 그려서 캡션을 남겨보세요</p>
+  <canvas id="draw-canvas" class="draw-canvas" width="720" height="900"></canvas>
+  <div class="draw-pad-controls">
+    <button type="button" id="draw-clear" class="btn-ghost">지우기</button>
+    <button type="button" id="draw-close" class="btn-ghost">닫기</button>
+    <button type="button" id="draw-save" class="btn-accent">저장</button>
+  </div>
+  <p id="draw-status" class="draw-status" aria-live="polite"></p>
+</div>
+
+<!-- 재사용 템플릿 -->
+<template id="photo-card-template">
+  <button type="button" class="photo-frame">
+    <img class="photo-img" alt="" loading="lazy">
+    <div class="placeholder-box photo-placeholder" aria-hidden="true">
+      <span class="placeholder-label"></span>
+    </div>
+    <span class="photo-dot" hidden aria-hidden="true"></span>
+  </button>
+</template>
+
+<!-- Firebase (compat build: 빌드 도구 없이 전역 firebase 객체 사용) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

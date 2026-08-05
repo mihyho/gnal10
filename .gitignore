@@ -1,0 +1,10 @@
+.DS_Store
+Thumbs.db
+*.log
+
+# 압축 전 원본 사진 백업 (용량이 커서 git에는 올리지 않음)
+photo-original/
+
+# 초기 디자인 레퍼런스용 번들 파일 (실제 사이트 코드 아님, 용량 큼)
+사진전시 온라인 도록.html
+.claude/

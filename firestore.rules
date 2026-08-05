@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 챕터 4 손글씨 캡션: 누구나 읽고 쓸 수 있는 "방명록" 형태.
+    // 인증 없이 전체 공개 쓰기이므로, 남용 방지를 위해 최소한의 검증만 둡니다.
+    match /ch4-captions/{photoId} {
+      allow read: if true;
+      allow write: if request.resource.data.keys().hasAll(['imageData', 'updatedAt'])
+                   && request.resource.data.imageData is string
+                   && request.resource.data.imageData.size() < 1500000; // 약 1.5MB 제한
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
