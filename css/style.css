@@ -442,8 +442,14 @@ main {
   color: var(--text);
 }
 
-.lightbox-caption-meta {
+.lightbox-caption-photographer {
   margin: 0;
+  font-size: 12px;
+  color: var(--text-65);
+}
+
+.lightbox-caption-meta {
+  margin: -6px 0 0;
   font-size: 11px;
   color: var(--text-45);
 }
