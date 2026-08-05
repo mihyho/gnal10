@@ -9,6 +9,7 @@ const img = lightbox.querySelector('.lightbox-img');
 const placeholder = lightbox.querySelector('.lightbox-placeholder');
 const placeholderLabel = placeholder.querySelector('.placeholder-label');
 const captionTitle = lightbox.querySelector('.lightbox-caption-title');
+const captionPhotographer = lightbox.querySelector('.lightbox-caption-photographer');
 const captionMeta = lightbox.querySelector('.lightbox-caption-meta');
 const captionBody = lightbox.querySelector('.lightbox-caption-body');
 
@@ -39,7 +40,8 @@ function open(chapter, index) {
 
   loadImage(photoSrc(chapter, index), label);
   captionTitle.textContent = photo.title;
-  captionMeta.textContent = `${photo.photographer} · ${photo.meta}`;
+  captionPhotographer.textContent = photo.photographer;
+  captionMeta.textContent = photo.meta;
   captionBody.textContent = photo.body;
   flipCard.classList.remove('is-flipped');
 
