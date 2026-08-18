@@ -1,7 +1,7 @@
 // data.js 의 데이터를 index.html의 빈 섹션/템플릿에 채워 넣는다.
 // 사진 클릭 시 동작은 main.js가 넘겨주는 콜백(onChapter123Open / onChapter4Open)에 위임한다.
 
-import { EXHIBIT_INFO, INTRO_TITLE, INTRO_TEXT, CHAPTER_META, CHAPTER_CAPTIONS, CHAPTER4_PHOTOS, photoSrc, posterSrc, captionSrc } from './data.js';
+import { EXHIBIT_INFO, INTRO_TITLE, INTRO_TEXT, CHAPTER_META, CHAPTER_CAPTIONS, CHAPTER4_PHOTOS, photoSrc, posterSrc } from './data.js';
 
 const cardTemplate = document.getElementById('photo-card-template');
 
@@ -24,14 +24,10 @@ function fillPhotoFrame(frame, { src, label }) {
   img.src = src;
 }
 
-function createPhotoCard({ src, label, onOpen, hasDot }) {
+function createPhotoCard({ src, label, onOpen }) {
   const node = cardTemplate.content.firstElementChild.cloneNode(true);
   fillPhotoFrame(node, { src, label });
   node.setAttribute('aria-label', `${label} 확대 보기`);
-  if (hasDot !== undefined) {
-    const dot = node.querySelector('.photo-dot');
-    dot.hidden = !hasDot;
-  }
   node.addEventListener('click', onOpen);
   return node;
 }
@@ -140,7 +136,6 @@ function renderChapterFour(handlers) {
     const card = createPhotoCard({
       src: photoSrc(4, i),
       label,
-      hasDot: Boolean(captionSrc(photo.id)),
       onOpen: () => handlers.onChapter4Open(i),
     });
     card.dataset.ch4Index = String(i);

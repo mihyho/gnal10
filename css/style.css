@@ -289,16 +289,6 @@ main {
   letter-spacing: 0.03em;
 }
 
-.photo-dot {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent);
-}
-
 /* ---------- 하단 내비게이션 ---------- */
 .bottom-nav {
   position: fixed;
