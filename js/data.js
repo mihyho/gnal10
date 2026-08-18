@@ -129,6 +129,42 @@ export const CHAPTER4_PHOTOS = Array.from({ length: CHAPTER_META[4].count }, (_,
   id: `4-${i + 1}`,
 }));
 
+// 전시 기간 동안 Firestore(ch4-captions 컬렉션)에 실시간으로 쌓였던 손글씨 캡션을
+// 전시 종료 후 PNG로 내보내 photo/ch4-captions/ 에 고정했습니다. 이제 사이트는
+// DB 없이 이 정적 파일만 읽습니다. 손글씨를 남기지 않은 사진은 null입니다.
+export const CHAPTER4_CAPTION_FILES = {
+  '4-1': 'ch4-captions/4-1.png',
+  '4-2': 'ch4-captions/4-2.png',
+  '4-3': 'ch4-captions/4-3.png',
+  '4-4': 'ch4-captions/4-4.png',
+  '4-5': null,
+  '4-6': 'ch4-captions/4-6.png',
+  '4-7': 'ch4-captions/4-7.png',
+  '4-8': 'ch4-captions/4-8.png',
+  '4-9': 'ch4-captions/4-9.png',
+  '4-10': 'ch4-captions/4-10.png',
+  '4-11': 'ch4-captions/4-11.png',
+  '4-12': 'ch4-captions/4-12.png',
+  '4-13': 'ch4-captions/4-13.png',
+  '4-14': null,
+  '4-15': null,
+  '4-16': 'ch4-captions/4-16.png',
+  '4-17': 'ch4-captions/4-17.png',
+  '4-18': 'ch4-captions/4-18.png',
+  '4-19': 'ch4-captions/4-19.png',
+  '4-20': 'ch4-captions/4-20.png',
+  '4-21': 'ch4-captions/4-21.png',
+  '4-22': 'ch4-captions/4-22.png',
+  '4-23': 'ch4-captions/4-23.png',
+  '4-24': 'ch4-captions/4-24.png',
+  '4-25': 'ch4-captions/4-25.png',
+  '4-26': 'ch4-captions/4-26.png',
+  '4-27': 'ch4-captions/4-27.png',
+  '4-28': 'ch4-captions/4-28.png',
+  '4-29': null,
+  '4-30': 'ch4-captions/4-30.png',
+};
+
 // ---------------------------------------------------------------------------
 // 사진 파일 매니페스트
 // ---------------------------------------------------------------------------
@@ -209,6 +245,11 @@ export const PHOTO_FILES = {
 
 export function photoSrc(chapter, index) {
   const file = PHOTO_FILES[chapter]?.[index];
+  return file ? `photo/${file}` : null;
+}
+
+export function captionSrc(photoId) {
+  const file = CHAPTER4_CAPTION_FILES[photoId];
   return file ? `photo/${file}` : null;
 }
 
