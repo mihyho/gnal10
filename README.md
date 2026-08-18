@@ -9,14 +9,13 @@ index.html          모든 섹션(포스터/서문/챕터1~4)을 담은 단일 �
 css/
   style.css          디자인 토큰, 반응형 레이아웃, 라이트박스/드로잉 패드 스타일
 js/
-  data.js            전시 정보 / 서문 / 챕터 서문 / 챕터1~3 캡션 / 사진 파일 매니페스트
-  firebase-config.js Firebase 설정 (placeholder, TODO 주석 포함)
+  data.js            전시 정보 / 서문 / 챕터 서문 / 챕터1~3 캡션 / 사진 파일 매니페스트 / 챕터4 손글씨 캡션 매니페스트
   gallery.js         data.js → DOM 렌더링 (포스터, 서문, 챕터별 사진 그리드)
   lightbox.js         챕터 1~3: 확대 → 플립 캡션 인터랙션
-  chapter4.js         챕터 4: 확대 → 손글씨 드로잉 패드, Firestore 실시간 동기화 / localStorage 폴백
+  chapter4.js         챕터 4: 확대 → 플립되며 관람객 손글씨 캡션(정적 이미지) 표시
   main.js             엔트리포인트 (모듈 조립, 하단 내비 활성 상태)
-photo/               실제 사진 파일을 넣는 곳 (지금은 비어 있음 → 자리표시자 표시)
-firestore.rules       챕터4 방명록용 Firestore 보안 규칙 예시
+photo/               실제 사진 파일
+  ch4-captions/      챕터 4 손글씨 캡션 PNG (전시 종료 후 Firestore에서 내보낸 정적 파일)
 ```
 
 빌드 스텝이 없으므로 `index.html`을 그대로 웹서버 루트에 올리면 동작합니다.
@@ -60,7 +59,10 @@ function makeCaptions(chapter, count) {
 }
 ```
 
-챕터 4는 텍스트 캡션이 없고, 관람객이 화면에 직접 그리는 손글씨가 캡션 역할을 합니다.
+챕터 4는 텍스트 캡션이 없고, 전시 기간 중 관람객이 화면에 직접 그린 손글씨가 캡션 역할을 합니다.
+전시가 끝난 뒤 실시간 입력은 껐고, 그동안 쌓인 손글씨를 `photo/ch4-captions/{photoId}.png`로
+내보내 고정했습니다. 사진마다 남겨진 캡션 유무는 `js/data.js`의 `CHAPTER4_CAPTION_FILES`에서
+관리합니다 (손글씨가 없는 사진은 `null`).
 
 ## 로컬에서 확인하기
 
@@ -73,23 +75,20 @@ npx serve .
 python -m http.server 8000
 ```
 
-## Firebase(Firestore) 설정 — 챕터 4 손글씨 캡션용
+## 챕터 4 손글씨 캡션 (아카이브됨)
 
-챕터 4는 관람객이 남긴 손글씨를 **모두가 함께 보는 방명록**처럼 실시간 공유합니다. 아직 Firebase
-프로젝트가 없다면 `js/firebase-config.js`의 placeholder 값 그대로 두세요 — 자동으로 이 브라우저의
-localStorage에만 저장되는 폴백 모드로 동작합니다(다른 방문자와는 공유되지 않음).
+전시 기간 중에는 Firebase(Firestore)의 `ch4-captions` 컬렉션에 관람객이 남긴 손글씨를 실시간으로
+모아 모든 방문자에게 공유했습니다. 전시가 끝난 뒤 그 컬렉션 전체를 PNG로 내보내
+`photo/ch4-captions/`에 커밋했고, 사이트는 더 이상 Firebase SDK나 DB를 사용하지 않습니다
+(완전히 정적 사이트). 데이터 흐름은 아래와 같았습니다.
 
-실시간 공유를 켜려면:
-
-1. [Firebase 콘솔](https://console.firebase.google.com)에서 프로젝트 생성 후 Firestore Database 활성화.
-2. 웹 앱 등록 후 SDK 설정값을 `js/firebase-config.js`의 `firebaseConfig` 객체에 그대로 채워 넣습니다
-   (환경변수 없이 파일에 직접 씁니다 — 빌드 스텝이 없기 때문입니다. Firebase 웹 SDK 설정값은 클라이언트에
-   노출되는 것이 정상이며, 보안은 아래 Firestore 규칙으로 제어합니다).
-3. Firestore 보안 규칙을 [firestore.rules](firestore.rules) 내용으로 교체합니다. 인증 없이 누구나 쓸 수
-   있는 공개 방명록 구조이므로, 이미지 크기 제한 정도만 걸어두었습니다. 남용이 우려되면 Firebase
-   App Check 도입을 고려하세요.
-4. 캡션은 `ch4-captions/{photoId}` 문서에 `{ imageData: "data:image/png;base64,...", updatedAt }` 형태로
-   저장되고, 모든 방문자가 `onSnapshot`으로 실시간 구독합니다.
+1. 관람객이 캔버스에 그린 손글씨를 `canvas.toDataURL('image/png')`로 만들어 Firestore
+   `ch4-captions/{photoId}` 문서에 저장 (당시 보안 규칙은 git 히스토리의 `firestore.rules` 참고).
+2. 전시 종료 후, Firestore REST API(`GET /v1/projects/{projectId}/databases/(default)/documents/ch4-captions`,
+   공개 read 규칙 덕분에 인증 없이 조회 가능)로 컬렉션을 통째로 내보내 각 문서의 base64
+   `imageData`를 디코딩해 `photo/ch4-captions/{photoId}.png`로 저장.
+3. `js/chapter4.js`에서 Firebase/localStorage 연동 코드를 제거하고, `js/data.js`의
+   `CHAPTER4_CAPTION_FILES` 매니페스트를 정적으로 읽어 라이트박스 뒷면에 표시하도록 변경.
 
 ## GitHub Pages 배포
 
@@ -102,9 +101,7 @@ localStorage에만 저장되는 폴백 모드로 동작합니다(다른 방문�
 모든 리소스 경로가 상대경로(`css/`, `js/`, `photo/`)라서 user page든 project page든 별도 설정 없이 그대로
 동작합니다.
 
-## 아직 안 된 것 / TODO
+## 상태
 
-- `photo/` 폴더에 실제 사진 파일 넣고 `js/data.js`의 `PHOTO_FILES` 채우기
-- `전체캡션.pdf` 내용을 `js/data.js`의 `CHAPTER_CAPTIONS`에 옮겨 적기
-- Firebase 프로젝트 생성 및 `js/firebase-config.js` 값 채우기 (안 하면 localStorage 폴백으로 동작)
-- 포스터 이미지(`EXHIBIT_INFO.posterFile`) 채우기
+전시(2026.08.07–09)가 종료되었고, 사진/캡션/포스터가 모두 채워진 완전한 정적 사이트입니다.
+빌드 스텝도, 외부 서비스 연동(Firebase 등)도 없습니다.

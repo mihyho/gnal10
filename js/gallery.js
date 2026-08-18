@@ -1,7 +1,7 @@
 // data.js 의 데이터를 index.html의 빈 섹션/템플릿에 채워 넣는다.
 // 사진 클릭 시 동작은 main.js가 넘겨주는 콜백(onChapter123Open / onChapter4Open)에 위임한다.
 
-import { EXHIBIT_INFO, INTRO_TITLE, INTRO_TEXT, CHAPTER_META, CHAPTER_CAPTIONS, CHAPTER4_PHOTOS, photoSrc, posterSrc } from './data.js';
+import { EXHIBIT_INFO, INTRO_TITLE, INTRO_TEXT, CHAPTER_META, CHAPTER_CAPTIONS, CHAPTER4_PHOTOS, photoSrc, posterSrc, captionSrc } from './data.js';
 
 const cardTemplate = document.getElementById('photo-card-template');
 
@@ -128,7 +128,7 @@ function renderChapterFour(handlers) {
   renderChapterHeader(
     section,
     CHAPTER_META[4],
-    '사진을 두 번 탭하면 손글씨로 캡션을 남길 수 있어요. 모두에게 실시간으로 공유됩니다.'
+    '사진을 두 번 탭하면 관람객이 남긴 손글씨 캡션을 볼 수 있어요.'
   );
 
   const grid = document.createElement('div');
@@ -140,7 +140,7 @@ function renderChapterFour(handlers) {
     const card = createPhotoCard({
       src: photoSrc(4, i),
       label,
-      hasDot: false,
+      hasDot: Boolean(captionSrc(photo.id)),
       onOpen: () => handlers.onChapter4Open(i),
     });
     card.dataset.ch4Index = String(i);

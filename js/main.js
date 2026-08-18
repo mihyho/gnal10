@@ -29,16 +29,12 @@ function initActiveNav() {
 
 function main() {
   const lightbox = initLightbox();
-  // chapter4는 렌더링 직후에 초기화한다 (초기화 시점에 저장된 드로잉 유무를
-  // 그리드의 점 표시에 반영하는데, 그리드가 아직 없으면 반영할 대상이 없다).
-  let chapter4;
+  const chapter4 = initChapter4();
 
   renderAll({
     onChapter123Open: (chapter, index) => lightbox.open(chapter, index),
-    onChapter4Open: (index) => chapter4.openLightbox(index),
+    onChapter4Open: (index) => chapter4.open(index),
   });
-
-  chapter4 = initChapter4();
 
   initActiveNav();
 }

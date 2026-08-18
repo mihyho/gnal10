@@ -95,30 +95,26 @@
   </div>
 </div>
 
-<!-- 라이트박스: 챕터 4 (확대 → 두 번째 탭에서 드로잉 패드로 전환) -->
+<!-- 라이트박스: 챕터 4 (확대 → 플립되며 관람객 손글씨 캡션 표시) -->
 <div id="ch4-lightbox" class="lightbox" hidden>
   <button type="button" class="lightbox-close" aria-label="닫기">×</button>
   <div class="lightbox-stage">
-    <button type="button" class="ch4-card" aria-label="탭해서 손글씨 캡션 남기기">
-      <img class="ch4-lightbox-img" alt="">
-      <div class="placeholder-box lightbox-placeholder" aria-hidden="true">
-        <span class="placeholder-label"></span>
+    <div class="flip-card ch4-flip-card" role="dialog" aria-modal="true" aria-label="사진 확대 보기">
+      <div class="flip-inner">
+        <div class="flip-face flip-front">
+          <img class="ch4-lightbox-img lightbox-img" alt="">
+          <div class="placeholder-box lightbox-placeholder" aria-hidden="true">
+            <span class="placeholder-label"></span>
+          </div>
+        </div>
+        <div class="flip-face flip-back">
+          <img class="ch4-caption-img" alt="관람객이 남긴 손글씨 캡션" hidden>
+          <p class="ch4-caption-empty">남겨진 손글씨 캡션이 없습니다</p>
+        </div>
       </div>
-    </button>
-    <p class="lightbox-hint">한 번 더 탭하면 손글씨 캡션을 남길 수 있어요</p>
+    </div>
+    <p class="lightbox-hint">한 번 더 탭하면 손글씨 캡션이 보여요 · 바깥을 탭하면 닫혀요</p>
   </div>
-</div>
-
-<!-- 손글씨 캡션 드로잉 패드 -->
-<div id="draw-pad" class="draw-pad" hidden role="dialog" aria-modal="true" aria-label="손글씨 캡션 남기기">
-  <p class="draw-pad-hint">손가락(또는 마우스)으로 그려서 캡션을 남겨보세요</p>
-  <canvas id="draw-canvas" class="draw-canvas" width="720" height="900"></canvas>
-  <div class="draw-pad-controls">
-    <button type="button" id="draw-clear" class="btn-ghost">지우기</button>
-    <button type="button" id="draw-close" class="btn-ghost">닫기</button>
-    <button type="button" id="draw-save" class="btn-accent">저장</button>
-  </div>
-  <p id="draw-status" class="draw-status" aria-live="polite"></p>
 </div>
 
 <!-- 재사용 템플릿 -->
@@ -131,10 +127,6 @@
     <span class="photo-dot" hidden aria-hidden="true"></span>
   </button>
 </template>
-
-<!-- Firebase (compat build: 빌드 도구 없이 전역 firebase 객체 사용) -->
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 
 <script type="module" src="js/main.js"></script>
 </body>
